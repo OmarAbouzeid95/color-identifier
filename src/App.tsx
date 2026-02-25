@@ -174,13 +174,24 @@ function App() {
 							onClick={handleCanvasClick}
 						/>
 						{focusCoordinates && (
-							<div
-								className='absolute w-4 h-4 rounded-full border-2 border-border bg-transparent pointer-events-none'
-								style={{
-									left: focusCoordinates.x - 8,
-									top: focusCoordinates.y - 8,
-								}}
-							/>
+							<>
+								<div
+									className='absolute w-4 h-4 rounded-full border-2 border-border bg-transparent pointer-events-none'
+									style={{
+										left: focusCoordinates.x - 8,
+										top: focusCoordinates.y - 8,
+									}}
+								/>
+								<span
+									className='absolute py-2 px-4 border rounded-full bg-amber-700 z-10'
+									style={{
+										left: focusCoordinates.x,
+										top: focusCoordinates.y,
+									}}
+								>
+									{color?.name}
+								</span>
+							</>
 						)}
 					</CardContent>
 				</Card>
@@ -206,7 +217,7 @@ function App() {
 								</TableRow>
 								<TableRow>
 									<TableCell>RGB</TableCell>
-									<TableCell className='flex items-center gap-2 text-md font-semibold uppercase'>
+									<TableCell className='flex items-center gap-2 text-md font-semibold'>
 										<span>{color?.rgb}</span>
 										<Copy
 											size={16}

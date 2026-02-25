@@ -1,3 +1,8 @@
+function componentToHex(c: number) {
+	var hex = c.toString(16);
+	return hex.length == 1 ? '0' + hex : hex;
+}
+
 export function convertRGBToHex(r: number, g: number, b: number): string {
-	return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+	return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
