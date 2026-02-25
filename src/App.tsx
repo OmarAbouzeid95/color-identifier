@@ -4,6 +4,14 @@ import { Input } from './components/ui/input';
 import { Card, CardContent } from './components/ui/card';
 import { cn } from '@/lib/utils';
 import { convertRGBToHex } from './lib/helpers';
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from './components/ui/select';
 
 function App() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -17,6 +25,14 @@ function App() {
 		x: number;
 		y: number;
 	} | null>(null);
+	const [activeColorList, setActiveColorList] = useState<string>('basic');
+	const [colorsConfig, setColorsConfig] = useState<{
+		list: string[];
+		descriptions: Record<string, { title: string; description: string }>;
+	}>({
+		list: [],
+		descriptions: {},
+	});
 
 	const resetStates = () => {
 		setHasImage(false);
@@ -73,7 +89,7 @@ function App() {
 		if (!color?.hex) return;
 
 		fetch(
-			`https://api.color.pizza/v1/?list=default&values=${color.hex.replace('#', '')}`,
+			`https://api.color.pizza/v1/?list=${activeColorList}&values=${color.hex.replace('#', '')}`,
 		)
 			.then((res) => res.json())
 			.then((data) => {
@@ -87,12 +103,48 @@ function App() {
 			.catch((err) => {
 				console.error('Error fetching color name:', err);
 			});
-	}, [color?.hex]);
+	}, [color?.hex, activeColorList]);
+
+	useEffect(() => {
+		fetch('https://api.color.pizza/v1/lists')
+			.then((res) => res.json())
+			.then((data) => {
+				if (!data.availableColorNameLists || !data.listDescriptions) {
+					throw new Error('Invalid response structure');
+				}
+				setColorsConfig({
+					list: data.availableColorNameLists,
+					descriptions: data.listDescriptions,
+				});
+			})
+			.catch((err) => {
+				console.error('Error fetching color lists:', err);
+			});
+	}, []);
 
 	return (
 		<MainLayout>
 			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4'>
 				<Input type='file' accept='image/*' onChange={handleImageUpload} />
+				<Select
+					value={activeColorList}
+					onValueChange={(value) => setActiveColorList(value)}
+				>
+					<SelectTrigger className='w-45'>
+						<SelectValue placeholder='Select a color list' />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectGroup>
+							{colorsConfig.list.map((colorValue) => (
+								<SelectItem key={colorValue} value={colorValue}>
+									{colorsConfig.descriptions[colorValue]?.['title'] ||
+										colorValue}
+								</SelectItem>
+							))}
+						</SelectGroup>
+					</SelectContent>
+				</Select>
+
 				<Card className={cn('p-0', !hasImage && 'hidden')}>
 					<CardContent className='p-0 relative'>
 						<canvas
