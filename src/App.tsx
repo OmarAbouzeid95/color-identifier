@@ -19,6 +19,8 @@ import {
 	TableHeader,
 	TableRow,
 } from './components/ui/table';
+import { toast } from 'sonner';
+import { Copy } from 'lucide-react';
 
 function App() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -90,6 +92,17 @@ function App() {
 			URL.revokeObjectURL(img.src);
 		};
 		img.src = URL.createObjectURL(file);
+	};
+
+	const handleCopy = (text: string) => {
+		navigator.clipboard
+			.writeText(text)
+			.then(() => {
+				toast.success('Copied to clipboard.');
+			})
+			.catch((err) => {
+				console.error('Failed to copy text: ', err);
+			});
 	};
 
 	useEffect(() => {
@@ -183,14 +196,22 @@ function App() {
 							<TableBody>
 								<TableRow>
 									<TableCell>HEX</TableCell>
-									<TableCell className='text-md font-semibold uppercase'>
-										{color?.hex}
+									<TableCell className='flex items-center gap-2 text-md font-semibold uppercase'>
+										<span>{color?.hex}</span>
+										<Copy
+											size={16}
+											onClick={() => handleCopy(color?.hex || '')}
+										/>
 									</TableCell>
 								</TableRow>
 								<TableRow>
 									<TableCell>RGB</TableCell>
-									<TableCell className='text-md font-semibold'>
-										{color?.rgb}
+									<TableCell className='flex items-center gap-2 text-md font-semibold uppercase'>
+										<span>{color?.rgb}</span>
+										<Copy
+											size={16}
+											onClick={() => handleCopy(color?.rgb || '')}
+										/>
 									</TableCell>
 								</TableRow>
 							</TableBody>
