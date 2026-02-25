@@ -20,7 +20,9 @@ import {
 	TableRow,
 } from './components/ui/table';
 import { toast } from 'sonner';
-import { Copy } from 'lucide-react';
+import { Copy, FileImage } from 'lucide-react';
+import { Label } from './components/ui/label';
+import FileImages from './components/FileImages';
 
 function App() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -145,7 +147,24 @@ function App() {
 	return (
 		<MainLayout>
 			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4'>
-				<Input type='file' accept='image/*' onChange={handleImageUpload} />
+				<Label htmlFor='image-upload'>
+					<Card>
+						<CardContent className='flex flex-col items-center gap-4'>
+							<FileImages />
+							<span>Drop your image here, or browse</span>
+							<span className='text-xs text-muted-foreground'>
+								Supports: JPG, PNG, WebP
+							</span>
+						</CardContent>
+					</Card>
+				</Label>
+				<Input
+					id='image-upload'
+					className='hidden'
+					type='file'
+					accept='image/*'
+					onChange={handleImageUpload}
+				/>
 				<Select
 					value={activeColorList}
 					onValueChange={(value) => setActiveColorList(value)}
@@ -196,11 +215,11 @@ function App() {
 					</CardContent>
 				</Card>
 				{color && (
-					<div className='w-full rounded-base flex flex-col shadow-shadow border-b-2 border-r-2 bg-background overflow-hidden'>
+					<div className='w-full rounded-base flex flex-col shadow-shadow border-b border-r bg-background overflow-hidden'>
 						<Table>
 							<TableHeader>
 								<TableRow>
-									<TableHead className='w-25'>Color Format</TableHead>
+									<TableHead className='w-40'>Color Format</TableHead>
 									<TableHead>Value</TableHead>
 								</TableRow>
 							</TableHeader>
