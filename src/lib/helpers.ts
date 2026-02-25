@@ -6,3 +6,8 @@ function componentToHex(c: number) {
 export function convertRGBToHex(r: number, g: number, b: number): string {
 	return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
+
+export function capitalizeFirstLetter(str: string): string {
+	if (!str) return '';
+	return str.charAt(0).toUpperCase() + str.slice(1);
+}

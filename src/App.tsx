@@ -3,7 +3,7 @@ import MainLayout from './components/layouts/MainLayout';
 import { Input } from './components/ui/input';
 import { Card, CardContent } from './components/ui/card';
 import { cn } from '@/lib/utils';
-import { convertRGBToHex } from './lib/helpers';
+import { capitalizeFirstLetter, convertRGBToHex } from './lib/helpers';
 import {
 	Select,
 	SelectContent,
@@ -205,6 +205,16 @@ function App() {
 								</TableRow>
 							</TableHeader>
 							<TableBody>
+								<TableRow>
+									<TableCell>Name</TableCell>
+									<TableCell className='flex items-center gap-2 text-md font-semibold'>
+										<span>{capitalizeFirstLetter(color?.name || '')}</span>
+										<Copy
+											size={16}
+											onClick={() => handleCopy(color?.hex || '')}
+										/>
+									</TableCell>
+								</TableRow>
 								<TableRow>
 									<TableCell>HEX</TableCell>
 									<TableCell className='flex items-center gap-2 text-md font-semibold uppercase'>
