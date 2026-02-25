@@ -11,6 +11,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from './components/ui/select';
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from './components/ui/table';
 
 function App() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -164,13 +172,29 @@ function App() {
 					</CardContent>
 				</Card>
 				{color && (
-					<div className='flex items-center gap-3'>
-						<div
-							className='w-10 h-10 rounded-base border-2 border-border'
-							style={{ backgroundColor: color.hex }}
-						/>
-						<span className='font-heading text-lg'>{color.hex}</span>
-						<span className='font-heading text-sm'>{color.name}</span>
+					<div className='w-full rounded-base flex flex-col shadow-shadow border-b-2 border-r-2 bg-background overflow-hidden'>
+						<Table>
+							<TableHeader>
+								<TableRow>
+									<TableHead className='w-25'>Color Format</TableHead>
+									<TableHead>Value</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								<TableRow>
+									<TableCell>HEX</TableCell>
+									<TableCell className='text-md font-semibold uppercase'>
+										{color?.hex}
+									</TableCell>
+								</TableRow>
+								<TableRow>
+									<TableCell>RGB</TableCell>
+									<TableCell className='text-md font-semibold'>
+										{color?.rgb}
+									</TableCell>
+								</TableRow>
+							</TableBody>
+						</Table>
 					</div>
 				)}
 			</div>
