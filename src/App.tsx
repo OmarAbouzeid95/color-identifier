@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import MainLayout from './components/layouts/MainLayout';
 import { Input } from './components/ui/input';
 import { Card, CardContent } from './components/ui/card';
@@ -8,11 +8,21 @@ import { convertRGBToHex } from './lib/helpers';
 function App() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [hasImage, setHasImage] = useState(false);
-	const [color, setColor] = useState<string | null>(null);
+	const [color, setColor] = useState<{
+		name?: string;
+		hex?: string;
+		rgb?: string;
+	} | null>(null);
 	const [focusCoordinates, setFocusCoordinates] = useState<{
 		x: number;
 		y: number;
 	} | null>(null);
+
+	const resetStates = () => {
+		setHasImage(false);
+		setColor(null);
+		setFocusCoordinates(null);
+	};
 
 	const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
 		const canvas = canvasRef.current;
@@ -30,10 +40,14 @@ function App() {
 
 		const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
 		const hex = convertRGBToHex(r, g, b);
-		setColor(hex);
+		setColor({
+			hex,
+			rgb: `rgb(${r}, ${g}, ${b})`,
+		});
 	};
 
 	const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+		resetStates();
 		const file = e.target.files?.[0];
 		if (!file) return;
 
@@ -54,6 +68,26 @@ function App() {
 		};
 		img.src = URL.createObjectURL(file);
 	};
+
+	useEffect(() => {
+		if (!color?.hex) return;
+
+		fetch(
+			`https://api.color.pizza/v1/?list=default&values=${color.hex.replace('#', '')}`,
+		)
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.paletteTitle) {
+					setColor((prev) => ({
+						...prev,
+						name: data.paletteTitle,
+					}));
+				}
+			})
+			.catch((err) => {
+				console.error('Error fetching color name:', err);
+			});
+	}, [color?.hex]);
 
 	return (
 		<MainLayout>
@@ -81,9 +115,10 @@ function App() {
 					<div className='flex items-center gap-3'>
 						<div
 							className='w-10 h-10 rounded-base border-2 border-border'
-							style={{ backgroundColor: color }}
+							style={{ backgroundColor: color.hex }}
 						/>
-						<span className='font-heading text-lg'>{color}</span>
+						<span className='font-heading text-lg'>{color.hex}</span>
+						<span className='font-heading text-sm'>{color.name}</span>
 					</div>
 				)}
 			</div>
