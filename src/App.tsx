@@ -3,11 +3,16 @@ import MainLayout from './components/layouts/MainLayout';
 import { Input } from './components/ui/input';
 import { Card, CardContent } from './components/ui/card';
 import { cn } from '@/lib/utils';
+import { convertRGBToHex } from './lib/helpers';
 
 function App() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [hasImage, setHasImage] = useState(false);
 	const [color, setColor] = useState<string | null>(null);
+	const [focusCoordinates, setFocusCoordinates] = useState<{
+		x: number;
+		y: number;
+	} | null>(null);
 
 	const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
 		const canvas = canvasRef.current;
@@ -18,12 +23,13 @@ function App() {
 		const scaleY = canvas.height / rect.height;
 		const x = Math.floor((e.clientX - rect.left) * scaleX);
 		const y = Math.floor((e.clientY - rect.top) * scaleY);
+		setFocusCoordinates({ x: x / scaleX, y: y / scaleY });
 
 		const ctx = canvas.getContext('2d');
 		if (!ctx) return;
 
 		const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
-		const hex = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+		const hex = convertRGBToHex(r, g, b);
 		setColor(hex);
 	};
 
@@ -54,12 +60,21 @@ function App() {
 			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4'>
 				<Input type='file' accept='image/*' onChange={handleImageUpload} />
 				<Card className={cn('p-0', !hasImage && 'hidden')}>
-					<CardContent className='p-0'>
+					<CardContent className='p-0 relative'>
 						<canvas
 							ref={canvasRef}
 							className='w-full h-auto cursor-crosshair'
 							onClick={handleCanvasClick}
 						/>
+						{focusCoordinates && (
+							<div
+								className='absolute w-4 h-4 rounded-full border-2 border-border bg-transparent pointer-events-none'
+								style={{
+									left: focusCoordinates.x - 8,
+									top: focusCoordinates.y - 8,
+								}}
+							/>
+						)}
 					</CardContent>
 				</Card>
 				{color && (
