@@ -7,7 +7,6 @@ import { convertRGBToHex } from './lib/helpers';
 import {
 	Select,
 	SelectContent,
-	SelectGroup,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
@@ -130,18 +129,19 @@ function App() {
 					value={activeColorList}
 					onValueChange={(value) => setActiveColorList(value)}
 				>
-					<SelectTrigger className='w-45'>
+					<SelectTrigger className='w-full text-left'>
 						<SelectValue placeholder='Select a color list' />
 					</SelectTrigger>
-					<SelectContent>
-						<SelectGroup>
-							{colorsConfig.list.map((colorValue) => (
-								<SelectItem key={colorValue} value={colorValue}>
-									{colorsConfig.descriptions[colorValue]?.['title'] ||
-										colorValue}
-								</SelectItem>
-							))}
-						</SelectGroup>
+					<SelectContent className='max-w-87.5'>
+						{colorsConfig.list.map((colorValue) => (
+							<SelectItem
+								key={colorValue}
+								value={colorValue}
+								className='text-wrap max-w-85'
+							>
+								{colorsConfig.descriptions[colorValue]?.['title'] || colorValue}
+							</SelectItem>
+						))}
 					</SelectContent>
 				</Select>
 
