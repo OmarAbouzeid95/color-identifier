@@ -24,10 +24,11 @@ import {
 	TableRow,
 } from './components/ui/table';
 import { toast } from 'sonner';
-import { Copy } from 'lucide-react';
+import { Info, Copy } from 'lucide-react';
 import { Label } from './components/ui/label';
 import FileImages from './components/FileImages';
 import { type Color } from './types/colors';
+import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
 
 function App() {
 	const [hasImage, setHasImage] = useState(false);
@@ -173,25 +174,31 @@ function App() {
 					accept='image/*'
 					onChange={handleImageUpload}
 				/>
-				<Select
-					value={activeColorList}
-					onValueChange={(value) => setActiveColorList(value)}
-				>
-					<SelectTrigger className='w-full text-left'>
-						<SelectValue placeholder='Select a color list' />
-					</SelectTrigger>
-					<SelectContent className='max-w-87.5'>
-						{colorsConfig.list.map((colorValue) => (
-							<SelectItem
-								key={colorValue}
-								value={colorValue}
-								className='text-wrap max-w-85'
-							>
-								{colorsConfig.descriptions[colorValue]?.['title'] || colorValue}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</Select>
+				<div className='space-y-2'>
+					<Label className='block' htmlFor='color-list-select'>
+						Colors List
+					</Label>
+					<Select
+						value={activeColorList}
+						onValueChange={(value) => setActiveColorList(value)}
+					>
+						<SelectTrigger className='w-full text-left' id='color-list-select'>
+							<SelectValue placeholder='Select a color list' />
+						</SelectTrigger>
+						<SelectContent className='max-w-87.5'>
+							{colorsConfig.list.map((colorValue) => (
+								<SelectItem
+									key={colorValue}
+									value={colorValue}
+									className='text-wrap max-w-85'
+								>
+									{colorsConfig.descriptions[colorValue]?.['title'] ||
+										colorValue}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
 
 				<Card className={cn('p-0', !hasImage && 'hidden')}>
 					<CardContent className='p-0 relative'>
@@ -223,47 +230,56 @@ function App() {
 					</CardContent>
 				</Card>
 				{color && (
-					<div className='w-full rounded-base flex flex-col shadow-shadow border-b border-r bg-background overflow-hidden'>
-						<Table>
-							<TableHeader>
-								<TableRow>
-									<TableHead className='w-40'>Color Format</TableHead>
-									<TableHead>Value</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								<TableRow>
-									<TableCell>Name</TableCell>
-									<TableCell className='flex items-center gap-2 text-md font-semibold'>
-										<span>{capitalizeFirstLetter(color?.name || '')}</span>
-										<Copy
-											size={16}
-											onClick={() => handleCopy(color?.hex || '')}
-										/>
-									</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>HEX</TableCell>
-									<TableCell className='flex items-center gap-2 text-md font-semibold uppercase'>
-										<span>{color?.hex}</span>
-										<Copy
-											size={16}
-											onClick={() => handleCopy(color?.hex || '')}
-										/>
-									</TableCell>
-								</TableRow>
-								<TableRow>
-									<TableCell>RGB</TableCell>
-									<TableCell className='flex items-center gap-2 text-md font-semibold'>
-										<span>{color?.rgb}</span>
-										<Copy
-											size={16}
-											onClick={() => handleCopy(color?.rgb || '')}
-										/>
-									</TableCell>
-								</TableRow>
-							</TableBody>
-						</Table>
+					<div className='space-y-6'>
+						<Alert className='bg-amber-300'>
+							<Info />
+							<AlertTitle>Success! Your changes have been saved</AlertTitle>
+							<AlertDescription>
+								This is an alert with icon, title and description.
+							</AlertDescription>
+						</Alert>
+						<div className='w-full rounded-base flex flex-col shadow-shadow border-b border-r bg-background overflow-hidden'>
+							<Table>
+								<TableHeader>
+									<TableRow>
+										<TableHead className='w-40'>Color Format</TableHead>
+										<TableHead>Value</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									<TableRow>
+										<TableCell>Name</TableCell>
+										<TableCell className='flex items-center gap-2 text-md font-semibold'>
+											<span>{capitalizeFirstLetter(color?.name || '')}</span>
+											<Copy
+												size={16}
+												onClick={() => handleCopy(color?.hex || '')}
+											/>
+										</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell>HEX</TableCell>
+										<TableCell className='flex items-center gap-2 text-md font-semibold uppercase'>
+											<span>{color?.hex}</span>
+											<Copy
+												size={16}
+												onClick={() => handleCopy(color?.hex || '')}
+											/>
+										</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell>RGB</TableCell>
+										<TableCell className='flex items-center gap-2 text-md font-semibold'>
+											<span>{color?.rgb}</span>
+											<Copy
+												size={16}
+												onClick={() => handleCopy(color?.rgb || '')}
+											/>
+										</TableCell>
+									</TableRow>
+								</TableBody>
+							</Table>
+						</div>
 					</div>
 				)}
 			</div>
