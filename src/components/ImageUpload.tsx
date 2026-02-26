@@ -6,6 +6,7 @@ import { Input } from './ui/input';
 import { cn } from '@/lib/utils';
 import { convertRGBToHex } from '@/lib/helpers';
 import { useColor } from '@/Providers/ColorProvider';
+import ColorListSelect from './ColorListSelect';
 
 export default function ImageUpload() {
 	const { color, setColor } = useColor();
@@ -78,7 +79,7 @@ export default function ImageUpload() {
 	};
 
 	return (
-		<>
+		<div className='flex flex-col gap-4'>
 			<Label htmlFor='image-upload'>
 				<Card>
 					<CardContent className='flex flex-col items-center gap-4'>
@@ -97,6 +98,7 @@ export default function ImageUpload() {
 				accept='image/*'
 				onChange={handleImageUpload}
 			/>
+			<ColorListSelect />
 			<Card className={cn('p-0', !hasImage && 'hidden')}>
 				<CardContent className='p-0 relative'>
 					<canvas
@@ -126,6 +128,6 @@ export default function ImageUpload() {
 					)}
 				</CardContent>
 			</Card>
-		</>
+		</div>
 	);
 }

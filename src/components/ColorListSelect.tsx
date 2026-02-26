@@ -7,6 +7,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from './ui/select';
+import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { Info } from 'lucide-react';
 
 export default function ColorListSelect() {
 	const { activeColorList, setActiveColorList, colorsConfig } = useColor();
@@ -35,6 +37,14 @@ export default function ColorListSelect() {
 					))}
 				</SelectContent>
 			</Select>
+			<Alert className='bg-white'>
+				<Info />
+				<AlertTitle>Color Set Details</AlertTitle>
+				<AlertDescription>
+					{colorsConfig?.descriptions?.[activeColorList]?.description ||
+						'No description available'}
+				</AlertDescription>
+			</Alert>
 		</div>
 	);
 }

@@ -2,13 +2,6 @@ import { useEffect, useState } from 'react';
 import MainLayout from './components/layouts/MainLayout';
 import { capitalizeFirstLetter, getNearsetColors } from './lib/helpers';
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from './components/ui/select';
-import {
 	Table,
 	TableBody,
 	TableCell,
@@ -21,7 +14,6 @@ import { Info, Copy } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
 import { useColor } from './Providers/ColorProvider';
 import ImageUpload from './components/ImageUpload';
-import ColorListSelect from './components/ColorListSelect';
 
 function App() {
 	const {
@@ -80,21 +72,21 @@ function App() {
 
 	return (
 		<MainLayout>
-			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4'>
+			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4 md:flex-row md:max-w-6xl md:justify-between'>
 				<ImageUpload />
-				<ColorListSelect />
 				{color && (
 					<div className='space-y-6'>
 						<Alert className='bg-amber-300'>
 							<Info />
-							<AlertTitle>Success! Your changes have been saved</AlertTitle>
+							<AlertTitle>Color Matching Note</AlertTitle>
 							<AlertDescription>
-								This is an alert with icon, title and description.
+								The values below are approximately calculated based on the
+								nearest available color match.
 							</AlertDescription>
 						</Alert>
-						<div className='w-full rounded-base flex flex-col shadow-shadow border-b border-r bg-background overflow-hidden'>
+						<div className='bg-white w-full rounded-base flex flex-col shadow-shadow border-b border-r overflow-hidden'>
 							<Table>
-								<TableHeader>
+								<TableHeader className='bg-white!'>
 									<TableRow>
 										<TableHead className='w-40'>Color Format</TableHead>
 										<TableHead>Value</TableHead>
