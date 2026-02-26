@@ -77,12 +77,21 @@ function App() {
 			console.log(nearestColor);
 			// setColor(nearestColor)
 		}
+		setColor({
+			name: 'Unknown',
+			hex,
+			rgb: `rgb(${r}, ${g}, ${b})`,
+			hsl: '',
+			lab: '',
+			bestContrast: '',
+		});
 	};
 
 	const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-		resetStates();
 		const file = e.target.files?.[0];
 		if (!file) return;
+
+		resetStates();
 
 		const img = new Image();
 		img.onload = () => {
