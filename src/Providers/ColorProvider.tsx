@@ -4,6 +4,8 @@ import { createContext, useContext, useState } from 'react';
 type ColorContextType = {
 	color: Color | null;
 	setColor: (color: Color | null) => void;
+	activeColorList: string;
+	setActiveColorList: (list: string) => void;
 };
 
 const ColorContext = createContext<ColorContextType | undefined>(undefined);
@@ -23,9 +25,12 @@ export default function ColorProvider({
 	children: React.ReactNode;
 }) {
 	const [color, setColor] = useState<Color | null>(null);
+	const [activeColorList, setActiveColorList] = useState<string>('basic');
 
 	return (
-		<ColorContext.Provider value={{ color, setColor }}>
+		<ColorContext.Provider
+			value={{ color, setColor, activeColorList, setActiveColorList }}
+		>
 			{children}
 		</ColorContext.Provider>
 	);
