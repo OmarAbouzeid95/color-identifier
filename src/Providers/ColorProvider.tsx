@@ -6,6 +6,14 @@ type ColorContextType = {
 	setColor: (color: Color | null) => void;
 	activeColorList: string;
 	setActiveColorList: (list: string) => void;
+	colorsConfig: {
+		list: string[];
+		descriptions: Record<string, { title: string; description: string }>;
+	};
+	setColorsConfig: (config: {
+		list: string[];
+		descriptions: Record<string, { title: string; description: string }>;
+	}) => void;
 };
 
 const ColorContext = createContext<ColorContextType | undefined>(undefined);
@@ -26,10 +34,24 @@ export default function ColorProvider({
 }) {
 	const [color, setColor] = useState<Color | null>(null);
 	const [activeColorList, setActiveColorList] = useState<string>('basic');
+	const [colorsConfig, setColorsConfig] = useState<{
+		list: string[];
+		descriptions: Record<string, { title: string; description: string }>;
+	}>({
+		list: [],
+		descriptions: {},
+	});
 
 	return (
 		<ColorContext.Provider
-			value={{ color, setColor, activeColorList, setActiveColorList }}
+			value={{
+				color,
+				setColor,
+				activeColorList,
+				setActiveColorList,
+				colorsConfig,
+				setColorsConfig,
+			}}
 		>
 			{children}
 		</ColorContext.Provider>

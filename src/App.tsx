@@ -18,21 +18,21 @@ import {
 } from './components/ui/table';
 import { toast } from 'sonner';
 import { Info, Copy } from 'lucide-react';
-import { Label } from './components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
 import { useColor } from './Providers/ColorProvider';
 import ImageUpload from './components/ImageUpload';
+import ColorListSelect from './components/ColorListSelect';
 
 function App() {
-	const { color, setColor, activeColorList, setActiveColorList } = useColor();
+	const {
+		color,
+		setColor,
+		activeColorList,
+		setActiveColorList,
+		colorsConfig,
+		setColorsConfig,
+	} = useColor();
 
-	const [colorsConfig, setColorsConfig] = useState<{
-		list: string[];
-		descriptions: Record<string, { title: string; description: string }>;
-	}>({
-		list: [],
-		descriptions: {},
-	});
 	const [nearest, setNearest] = useState<ReturnType<
 		typeof getNearsetColors
 	> | null>(null);
@@ -82,32 +82,7 @@ function App() {
 		<MainLayout>
 			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4'>
 				<ImageUpload />
-				<div className='space-y-2'>
-					<Label className='block' htmlFor='color-list-select'>
-						Colors List
-					</Label>
-					<Select
-						value={activeColorList}
-						onValueChange={(value) => setActiveColorList(value)}
-					>
-						<SelectTrigger className='w-full text-left' id='color-list-select'>
-							<SelectValue placeholder='Select a color list' />
-						</SelectTrigger>
-						<SelectContent className='max-w-87.5'>
-							{colorsConfig.list.map((colorValue) => (
-								<SelectItem
-									key={colorValue}
-									value={colorValue}
-									className='text-wrap max-w-85'
-								>
-									{colorsConfig.descriptions[colorValue]?.['title'] ||
-										colorValue}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
-
+				<ColorListSelect />
 				{color && (
 					<div className='space-y-6'>
 						<Alert className='bg-amber-300'>
