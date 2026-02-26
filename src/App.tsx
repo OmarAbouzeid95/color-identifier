@@ -3,7 +3,11 @@ import MainLayout from './components/layouts/MainLayout';
 import { Input } from './components/ui/input';
 import { Card, CardContent } from './components/ui/card';
 import { cn } from '@/lib/utils';
-import { capitalizeFirstLetter, convertRGBToHex } from './lib/helpers';
+import {
+	capitalizeFirstLetter,
+	convertRGBToHex,
+	getNearsetColors,
+} from './lib/helpers';
 import {
 	Select,
 	SelectContent,
@@ -20,18 +24,14 @@ import {
 	TableRow,
 } from './components/ui/table';
 import { toast } from 'sonner';
-import { Copy, FileImage } from 'lucide-react';
+import { Copy } from 'lucide-react';
 import { Label } from './components/ui/label';
 import FileImages from './components/FileImages';
+import { type Color } from './types/colors';
 
 function App() {
-	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [hasImage, setHasImage] = useState(false);
-	const [color, setColor] = useState<{
-		name?: string;
-		hex?: string;
-		rgb?: string;
-	} | null>(null);
+	const [color, setColor] = useState<Color | null>(null);
 	const [focusCoordinates, setFocusCoordinates] = useState<{
 		x: number;
 		y: number;
@@ -44,6 +44,10 @@ function App() {
 		list: [],
 		descriptions: {},
 	});
+	const [nearest, setNearest] = useState<ReturnType<
+		typeof getNearsetColors
+	> | null>(null);
+	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	const resetStates = () => {
 		setHasImage(false);
@@ -67,10 +71,12 @@ function App() {
 
 		const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
 		const hex = convertRGBToHex(r, g, b);
-		setColor({
-			hex,
-			rgb: `rgb(${r}, ${g}, ${b})`,
-		});
+		console.log({ hex });
+		const nearestColor = nearest?.(hex);
+		if (nearestColor) {
+			console.log(nearestColor);
+			// setColor(nearestColor)
+		}
 	};
 
 	const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,26 +114,6 @@ function App() {
 	};
 
 	useEffect(() => {
-		if (!color?.hex) return;
-
-		fetch(
-			`https://api.color.pizza/v1/?list=${activeColorList}&values=${color.hex.replace('#', '')}`,
-		)
-			.then((res) => res.json())
-			.then((data) => {
-				if (data.paletteTitle) {
-					setColor((prev) => ({
-						...prev,
-						name: data.paletteTitle,
-					}));
-				}
-			})
-			.catch((err) => {
-				console.error('Error fetching color name:', err);
-			});
-	}, [color?.hex, activeColorList]);
-
-	useEffect(() => {
 		fetch('https://api.color.pizza/v1/lists')
 			.then((res) => res.json())
 			.then((data) => {
@@ -143,6 +129,19 @@ function App() {
 				console.error('Error fetching color lists:', err);
 			});
 	}, []);
+
+	useEffect(() => {
+		fetch(`https://api.color.pizza/v1/?list=${activeColorList}`)
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.colors && Array.isArray(data.colors)) {
+					setNearest(getNearsetColors(data.colors));
+				}
+			})
+			.catch((err) => {
+				console.error('Error fetching color lists:', err);
+			});
+	}, [activeColorList]);
 
 	return (
 		<MainLayout>
