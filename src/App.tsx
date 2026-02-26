@@ -27,12 +27,12 @@ import { toast } from 'sonner';
 import { Info, Copy } from 'lucide-react';
 import { Label } from './components/ui/label';
 import FileImages from './components/FileImages';
-import { type Color } from './types/colors';
 import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
+import { useColor } from './Providers/ColorProvider';
 
 function App() {
+	const { color, setColor } = useColor();
 	const [hasImage, setHasImage] = useState(false);
-	const [color, setColor] = useState<Color | null>(null);
 	const [focusCoordinates, setFocusCoordinates] = useState<{
 		x: number;
 		y: number;
