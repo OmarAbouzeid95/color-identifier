@@ -7,8 +7,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from './ui/select';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
-import { Info } from 'lucide-react';
 
 export default function ColorListSelect() {
 	const { activeColorList, setActiveColorList, colorsConfig } = useColor();
@@ -23,28 +21,39 @@ export default function ColorListSelect() {
 				onValueChange={(value) => setActiveColorList(value)}
 			>
 				<SelectTrigger className='w-full text-left' id='color-list-select'>
-					<SelectValue placeholder='Select a color list' />
+					<SelectValue placeholder='Select a color list'>
+						{colorsConfig.descriptions[activeColorList]?.['title']}
+					</SelectValue>
 				</SelectTrigger>
-				<SelectContent className='max-w-87.5'>
-					{colorsConfig.list.map((colorValue) => (
-						<SelectItem
-							key={colorValue}
-							value={colorValue}
-							className='text-wrap max-w-85'
-						>
-							{colorsConfig.descriptions[colorValue]?.['title'] || colorValue}
-						</SelectItem>
-					))}
+				<SelectContent className='max-w-87.5 md:max-w-full'>
+					{colorsConfig.list.map((colorValue) => {
+						const hasDescription =
+							colorsConfig?.descriptions?.[activeColorList]?.description;
+						return (
+							<SelectItem
+								key={colorValue}
+								value={colorValue}
+								className='max-w-85 md:max-w-full'
+							>
+								<div className='flex flex-col gap-1 items-start py-2'>
+									<p>
+										{colorsConfig.descriptions[colorValue]?.['title'] ||
+											colorValue}
+									</p>
+									{hasDescription && (
+										<p className='text-xs text-muted-foreground'>
+											{
+												colorsConfig?.descriptions?.[activeColorList]
+													?.description
+											}
+										</p>
+									)}
+								</div>
+							</SelectItem>
+						);
+					})}
 				</SelectContent>
 			</Select>
-			<Alert className='bg-white'>
-				<Info />
-				<AlertTitle>Color Set Details</AlertTitle>
-				<AlertDescription>
-					{colorsConfig?.descriptions?.[activeColorList]?.description ||
-						'No description available'}
-				</AlertDescription>
-			</Alert>
 		</div>
 	);
 }
