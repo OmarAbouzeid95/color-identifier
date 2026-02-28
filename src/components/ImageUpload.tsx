@@ -1,12 +1,13 @@
 import { Label } from '@/components/ui/label';
 import { useRef, useState } from 'react';
 import { Card, CardContent } from './ui/card';
-import FileImages from './FileImages';
 import { Input } from './ui/input';
 import { cn } from '@/lib/utils';
 import { convertRGBToHex } from '@/lib/helpers';
 import { useColor } from '@/Providers/ColorProvider';
 import ColorListSelect from './ColorListSelect';
+import { Upload } from 'lucide-react';
+import { Button } from './ui/button';
 
 export default function ImageUpload() {
 	const { color, setColor } = useColor();
@@ -16,6 +17,7 @@ export default function ImageUpload() {
 		y: number;
 	} | null>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const resetStates = () => {
 		setHasImage(false);
@@ -80,27 +82,6 @@ export default function ImageUpload() {
 
 	return (
 		<div className='flex flex-col gap-4 md:flex-row md:justify-between'>
-			<div className='space-y-4 md:max-w-lg md:min-w-lg'>
-				<Label htmlFor='image-upload' className='block'>
-					<Card className='bg-white w-full'>
-						<CardContent className='flex flex-col md:h-44 items-center justify-center gap-4'>
-							<FileImages />
-							<span>Drop your image here, or browse</span>
-							<span className='text-xs text-muted-foreground'>
-								Supports: JPG, PNG, WebP
-							</span>
-						</CardContent>
-					</Card>
-				</Label>
-				<Input
-					id='image-upload'
-					className='hidden'
-					type='file'
-					accept='image/*'
-					onChange={handleImageUpload}
-				/>
-				<ColorListSelect />
-			</div>
 			<Card
 				className={cn('p-0 md:max-w-lg overflow-hidden', !hasImage && 'hidden')}
 			>
@@ -132,6 +113,42 @@ export default function ImageUpload() {
 					)}
 				</CardContent>
 			</Card>
+			<div className='space-y-4 md:max-w-lg md:min-w-lg'>
+				<Label htmlFor='image-upload' className='block'>
+					{!hasImage && (
+						<Card className='bg-white w-full border-dashed shadow-none!'>
+							<CardContent className='flex flex-col md:h-44 items-center justify-center gap-4'>
+								<div className='bg-background p-4 rounded-full'>
+									<Upload />
+								</div>
+								<span>Drop your image here, or browse</span>
+								<span className='text-xs text-muted-foreground'>
+									Supports: JPG, PNG, WebP
+								</span>
+							</CardContent>
+						</Card>
+					)}
+					{hasImage && (
+						<Button
+							className='w-full inline-flex items-center gap-2'
+							type='button'
+							onClick={() => fileInputRef.current?.click()}
+						>
+							<Upload />
+							<span>Upload another photo</span>
+						</Button>
+					)}
+				</Label>
+				<Input
+					ref={fileInputRef}
+					id='image-upload'
+					className='hidden'
+					type='file'
+					accept='image/*'
+					onChange={handleImageUpload}
+				/>
+				<ColorListSelect />
+			</div>
 		</div>
 	);
 }
