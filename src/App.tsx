@@ -1,24 +1,13 @@
 import { useEffect, useState } from 'react';
 import MainLayout from './components/layouts/MainLayout';
-import { capitalizeFirstLetter, getNearsetColors } from './lib/helpers';
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from './components/ui/table';
-import { toast } from 'sonner';
-import { Info, Copy } from 'lucide-react';
-import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
+import { getNearsetColors } from './lib/helpers';
 import { useColor } from './Providers/ColorProvider';
 import ImageUpload from './components/ImageUpload';
 import ColorListSelect from './components/ColorListSelect';
+import ColorDetailsTable from './components/ColorDetailsTable';
 
 function App() {
 	const {
-		color,
 		setColor,
 		activeColorList,
 		setActiveColorList,
@@ -29,17 +18,6 @@ function App() {
 	const [nearest, setNearest] = useState<ReturnType<
 		typeof getNearsetColors
 	> | null>(null);
-
-	const handleCopy = (text: string) => {
-		navigator.clipboard
-			.writeText(text)
-			.then(() => {
-				toast.success('Copied to clipboard.');
-			})
-			.catch((err) => {
-				console.error('Failed to copy text: ', err);
-			});
-	};
 
 	useEffect(() => {
 		fetch('https://api.color.pizza/v1/lists')
@@ -75,57 +53,10 @@ function App() {
 		<MainLayout>
 			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4 md:max-w-7xl md:flex-row md:justify-between lg:gap-20'>
 				<ImageUpload />
-				{color && (
-					<div className='space-y-6'>
-						<ColorListSelect />
-						<Alert className='bg-amber-300'>
-							<Info />
-							<AlertTitle>Color Matching Note</AlertTitle>
-							<AlertDescription>
-								The values below are approximately calculated based on the
-								nearest available color match.
-							</AlertDescription>
-						</Alert>
-						<div className='bg-white w-full rounded-base flex flex-col shadow-shadow border-b border-r overflow-hidden'>
-							<Table>
-								<TableHeader className='bg-white!'>
-									<TableRow>
-										<TableHead className='w-40'>Color Format</TableHead>
-										<TableHead>Value</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									<TableRow>
-										<TableCell>Name</TableCell>
-										<TableCell className='flex items-center gap-2 text-md font-semibold'>
-											<span>{capitalizeFirstLetter(color?.name || '')}</span>
-											<Copy
-												size={16}
-												onClick={() => handleCopy(color?.hex || '')}
-											/>
-										</TableCell>
-									</TableRow>
-									{Object.entries(color).map(([key, value]) => {
-										if (key === 'name') return;
-										return (
-											<TableRow key={key}>
-												<TableCell className='uppercase'>{key}</TableCell>
-												<TableCell className='flex items-center gap-2 text-md font-semibold'>
-													<span>{value}</span>
-													<Copy
-														className='hover:cursor-pointer'
-														size={16}
-														onClick={() => handleCopy(value)}
-													/>
-												</TableCell>
-											</TableRow>
-										);
-									})}
-								</TableBody>
-							</Table>
-						</div>
-					</div>
-				)}
+				<div className='space-y-6'>
+					<ColorListSelect />
+					<ColorDetailsTable />
+				</div>
 			</div>
 		</MainLayout>
 	);
