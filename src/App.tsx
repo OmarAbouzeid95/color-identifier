@@ -52,6 +52,15 @@ function App() {
 
 	return (
 		<MainLayout>
+			<section className='max-w-lg mx-auto px-4 py-16 md:py-24 md:max-w-7xl text-center'>
+				<h2 className='text-4xl font-heading tracking-tight md:text-5xl'>
+					Identify Any Color
+				</h2>
+				<p className='mt-4 text-base text-foreground/60 max-w-lg mx-auto'>
+					Upload an image, click anywhere on it, and instantly get the
+					color name and values in every major format.
+				</p>
+			</section>
 			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4 md:max-w-7xl md:flex-row md:justify-between lg:gap-20'>
 				<ImageUpload />
 				<div className='space-y-6'>

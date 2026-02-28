@@ -58,9 +58,9 @@ export default function ColorDetailsTable() {
 				</AlertDescription>
 			</Alert>
 
-			{color && (
-				<div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
-					{/* Color swatch */}
+			<div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+				{/* Color swatch */}
+				{color && (
 					<div
 						className='md:col-span-2 h-20 rounded-base border-2 shadow-shadow flex items-end p-3 transition-colors'
 						style={{ backgroundColor: color.hex }}
@@ -69,12 +69,12 @@ export default function ColorDetailsTable() {
 							{capitalizeFirstLetter(color.name)}
 						</span>
 					</div>
+				)}
 
-					{COLOR_FORMATS.map((format) => (
-						<ColorEntry key={format} label={format} value={color?.[format]} />
-					))}
-				</div>
-			)}
+				{COLOR_FORMATS.map((format) => (
+					<ColorEntry key={format} label={format} value={color?.[format]} />
+				))}
+			</div>
 		</div>
 	);
 }
