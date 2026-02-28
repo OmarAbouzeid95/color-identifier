@@ -81,7 +81,7 @@ export default function ImageUpload() {
 	};
 
 	return (
-		<div className='flex flex-col gap-4 md:flex-row md:justify-between'>
+		<div className='flex flex-col gap-4'>
 			<Card
 				className={cn('p-0 md:max-w-lg overflow-hidden', !hasImage && 'hidden')}
 			>
@@ -147,7 +147,6 @@ export default function ImageUpload() {
 					accept='image/*'
 					onChange={handleImageUpload}
 				/>
-				<ColorListSelect />
 			</div>
 		</div>
 	);
