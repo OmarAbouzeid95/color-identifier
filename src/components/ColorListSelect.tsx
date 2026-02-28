@@ -25,16 +25,12 @@ export default function ColorListSelect() {
 						{colorsConfig.descriptions[activeColorList]?.['title']}
 					</SelectValue>
 				</SelectTrigger>
-				<SelectContent className='max-w-87.5 md:max-w-full'>
-					{colorsConfig.list.map((colorValue) => {
+				<SelectContent style={{ width: 'var(--radix-popper-anchor-width)' }}>
+					{colorsConfig.list.map((colorValue, index) => {
 						const hasDescription =
-							colorsConfig?.descriptions?.[activeColorList]?.description;
+							colorsConfig?.descriptions?.[colorValue]?.description;
 						return (
-							<SelectItem
-								key={colorValue}
-								value={colorValue}
-								className='max-w-85 md:max-w-full'
-							>
+							<SelectItem key={index} value={colorValue}>
 								<div className='flex flex-col gap-1 items-start py-2'>
 									<p>
 										{colorsConfig.descriptions[colorValue]?.['title'] ||
@@ -42,10 +38,7 @@ export default function ColorListSelect() {
 									</p>
 									{hasDescription && (
 										<p className='text-xs text-muted-foreground'>
-											{
-												colorsConfig?.descriptions?.[activeColorList]
-													?.description
-											}
+											{colorsConfig?.descriptions?.[colorValue]?.description}
 										</p>
 									)}
 								</div>
