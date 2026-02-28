@@ -14,6 +14,7 @@ import { Info, Copy } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from './components/ui/alert';
 import { useColor } from './Providers/ColorProvider';
 import ImageUpload from './components/ImageUpload';
+import ColorListSelect from './components/ColorListSelect';
 
 function App() {
 	const {
@@ -72,10 +73,11 @@ function App() {
 
 	return (
 		<MainLayout>
-			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4 md:max-w-6xl'>
+			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4 md:max-w-7xl md:flex-row md:justify-between'>
 				<ImageUpload />
 				{color && (
 					<div className='space-y-6'>
+						<ColorListSelect />
 						<Alert className='bg-amber-300'>
 							<Info />
 							<AlertTitle>Color Matching Note</AlertTitle>

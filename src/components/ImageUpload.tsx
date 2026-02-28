@@ -5,7 +5,6 @@ import { Input } from './ui/input';
 import { cn } from '@/lib/utils';
 import { convertRGBToHex } from '@/lib/helpers';
 import { useColor } from '@/Providers/ColorProvider';
-import ColorListSelect from './ColorListSelect';
 import { Upload } from 'lucide-react';
 import { Button } from './ui/button';
 
@@ -83,12 +82,15 @@ export default function ImageUpload() {
 	return (
 		<div className='flex flex-col gap-4'>
 			<Card
-				className={cn('p-0 md:max-w-lg overflow-hidden', !hasImage && 'hidden')}
+				className={cn(
+					'p-0 overflow-hidden bg-secondary-background h-80 lg:h-120 w-fit mx-auto',
+					!hasImage && 'hidden',
+				)}
 			>
-				<CardContent className='p-0 relative'>
+				<CardContent className='p-0 relative w-fit mx-auto h-full flex items-center justify-center'>
 					<canvas
 						ref={canvasRef}
-						className='w-full h-auto cursor-crosshair'
+						className='max-w-full max-h-full cursor-crosshair block'
 						onClick={handleCanvasClick}
 					/>
 					{focusCoordinates && (
