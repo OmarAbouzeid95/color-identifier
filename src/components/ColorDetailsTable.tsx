@@ -53,24 +53,28 @@ export default function ColorDetailsTable() {
 				<Info />
 				<AlertTitle>Color Matching Note</AlertTitle>
 				<AlertDescription>
-					The color name is matched to the nearest known color in the
-					selected list and may not be exact.
+					The color name is matched to the nearest known color in the selected
+					list and may not be exact.
 				</AlertDescription>
 			</Alert>
 
-			<div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
-				{/* Name entry spans full width */}
-				<div className='md:col-span-2'>
-					<ColorEntry
-						label='Name'
-						value={color ? capitalizeFirstLetter(color.name) : undefined}
-					/>
-				</div>
+			{color && (
+				<div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+					{/* Color swatch */}
+					<div
+						className='md:col-span-2 h-20 rounded-base border-2 shadow-shadow flex items-end p-3 transition-colors'
+						style={{ backgroundColor: color.hex }}
+					>
+						<span className='text-sm font-heading px-2 py-0.5 rounded-base bg-secondary-background/80 backdrop-blur-sm border'>
+							{capitalizeFirstLetter(color.name)}
+						</span>
+					</div>
 
-				{COLOR_FORMATS.map((format) => (
-					<ColorEntry key={format} label={format} value={color?.[format]} />
-				))}
-			</div>
+					{COLOR_FORMATS.map((format) => (
+						<ColorEntry key={format} label={format} value={color?.[format]} />
+					))}
+				</div>
+			)}
 		</div>
 	);
 }
