@@ -4,6 +4,7 @@ import { Card, CardContent } from './ui/card';
 import { Input } from './ui/input';
 import { cn } from '@/lib/utils';
 import {
+	capitalizeFirstLetter,
 	convertRGBToCMYK,
 	convertRGBToHex,
 	convertRGBToHSL,
@@ -89,7 +90,7 @@ export default function ImageUpload() {
 		<div className='flex flex-col gap-4'>
 			<Card
 				className={cn(
-					'p-0 overflow-hidden bg-secondary-background h-80 lg:h-120 w-fit mx-auto',
+					'p-0 bg-secondary-background h-80 lg:h-120 w-fit mx-auto overflow-visible',
 					!hasImage && 'hidden',
 				)}
 			>
@@ -109,13 +110,13 @@ export default function ImageUpload() {
 								}}
 							/>
 							<span
-								className='absolute py-2 px-4 border rounded-full bg-amber-700 z-10'
+								className='absolute py-1 px-3 border-2 rounded-base text-xs font-heading bg-secondary-background shadow-shadow z-10 -translate-x-1/2 whitespace-nowrap pointer-events-none'
 								style={{
 									left: focusCoordinates.x,
-									top: focusCoordinates.y,
+									top: focusCoordinates.y + 16,
 								}}
 							>
-								{color?.name}
+								{capitalizeFirstLetter(color?.name!)}
 							</span>
 						</>
 					)}
