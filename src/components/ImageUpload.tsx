@@ -3,7 +3,13 @@ import { useRef, useState } from 'react';
 import { Card, CardContent } from './ui/card';
 import { Input } from './ui/input';
 import { cn } from '@/lib/utils';
-import { convertRGBToHex } from '@/lib/helpers';
+import {
+	convertRGBToCMYK,
+	convertRGBToHex,
+	convertRGBToHSL,
+	convertRGBToHSV,
+	convertRGBToOKLCH,
+} from '@/lib/helpers';
 import { useColor } from '@/Providers/ColorProvider';
 import { Upload } from 'lucide-react';
 import { Button } from './ui/button';
@@ -39,19 +45,18 @@ export default function ImageUpload() {
 		if (!ctx) return;
 
 		const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
-		const hex = convertRGBToHex(r, g, b);
-		console.log({ hex });
 		// const nearestColor = nearest?.(hex);
 		// if (nearestColor) {
 		// 	console.log(nearestColor);
 		// }
 		setColor({
 			name: 'Unknown',
-			hex,
+			hex: convertRGBToHex(r, g, b),
 			rgb: `rgb(${r}, ${g}, ${b})`,
-			hsl: '',
-			lab: '',
-			bestContrast: '',
+			hsl: convertRGBToHSL(r, g, b),
+			hsv: convertRGBToHSV(r, g, b),
+			cmyk: convertRGBToCMYK(r, g, b),
+			oklch: convertRGBToOKLCH(r, g, b),
 		});
 	};
 

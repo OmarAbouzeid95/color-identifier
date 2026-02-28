@@ -73,7 +73,7 @@ function App() {
 
 	return (
 		<MainLayout>
-			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4 md:max-w-7xl md:flex-row md:justify-between'>
+			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4 md:max-w-7xl md:flex-row md:justify-between lg:gap-20'>
 				<ImageUpload />
 				{color && (
 					<div className='space-y-6'>
@@ -105,26 +105,22 @@ function App() {
 											/>
 										</TableCell>
 									</TableRow>
-									<TableRow>
-										<TableCell>HEX</TableCell>
-										<TableCell className='flex items-center gap-2 text-md font-semibold uppercase'>
-											<span>{color?.hex}</span>
-											<Copy
-												size={16}
-												onClick={() => handleCopy(color?.hex || '')}
-											/>
-										</TableCell>
-									</TableRow>
-									<TableRow>
-										<TableCell>RGB</TableCell>
-										<TableCell className='flex items-center gap-2 text-md font-semibold'>
-											<span>{color?.rgb}</span>
-											<Copy
-												size={16}
-												onClick={() => handleCopy(color?.rgb || '')}
-											/>
-										</TableCell>
-									</TableRow>
+									{Object.entries(color).map(([key, value]) => {
+										if (key === 'name') return;
+										return (
+											<TableRow key={key}>
+												<TableCell className='uppercase'>{key}</TableCell>
+												<TableCell className='flex items-center gap-2 text-md font-semibold'>
+													<span>{value}</span>
+													<Copy
+														className='hover:cursor-pointer'
+														size={16}
+														onClick={() => handleCopy(value)}
+													/>
+												</TableCell>
+											</TableRow>
+										);
+									})}
 								</TableBody>
 							</Table>
 						</div>

@@ -3,6 +3,7 @@ export type Color = {
 	hex: string;
 	rgb: string;
 	hsl: string;
-	lab: string;
-	bestContrast: string;
+	hsv: string;
+	cmyk: string;
+	oklch: string;
 };
