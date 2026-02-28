@@ -1,23 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import MainLayout from './components/layouts/MainLayout';
 import { getNearsetColors } from './lib/helpers';
 import { useColor } from './Providers/ColorProvider';
 import ImageUpload from './components/ImageUpload';
 import ColorListSelect from './components/ColorListSelect';
 import ColorDetailsTable from './components/ColorDetailsTable';
+import nearestColor from 'nearest-color';
 
 function App() {
-	const {
-		setColor,
-		activeColorList,
-		setActiveColorList,
-		colorsConfig,
-		setColorsConfig,
-	} = useColor();
-
-	const [nearest, setNearest] = useState<ReturnType<
-		typeof getNearsetColors
-	> | null>(null);
+	const { setColor, activeColorList, setColorsConfig, setNearestColors } =
+		useColor();
 
 	useEffect(() => {
 		fetch('https://api.color.pizza/v1/lists')
@@ -41,7 +33,16 @@ function App() {
 			.then((res) => res.json())
 			.then((data) => {
 				if (data.colors && Array.isArray(data.colors)) {
-					setNearest(getNearsetColors(data.colors));
+					setNearestColors(getNearsetColors(data.colors));
+
+					const nearest = nearestColor.from(getNearsetColors(data.colors));
+					setColor((prev) => {
+						if (!prev) return prev;
+						return {
+							...prev,
+							name: nearest(prev.hex)?.name || 'Unknown',
+						};
+					});
 				}
 			})
 			.catch((err) => {

@@ -1,4 +1,3 @@
-import nearestColor from 'nearest-color';
 import { type Color } from '@/types/colors';
 
 function componentToHex(c: number) {
@@ -131,9 +130,8 @@ export function capitalizeFirstLetter(str: string): string {
 }
 
 export function getNearsetColors(baseColors: Color[]) {
-	const colors = baseColors.reduce(
+	return baseColors.reduce(
 		(o, { name, hex }) => Object.assign(o, { [name]: hex }),
 		{},
 	);
-	return nearestColor.from(colors);
 }

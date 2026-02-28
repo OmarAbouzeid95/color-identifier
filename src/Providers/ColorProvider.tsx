@@ -1,9 +1,15 @@
 import type { Color } from '@/types/colors';
-import { createContext, useContext, useState } from 'react';
+import {
+	createContext,
+	useContext,
+	useState,
+	type Dispatch,
+	type SetStateAction,
+} from 'react';
 
 type ColorContextType = {
 	color: Color | null;
-	setColor: (color: Color | null) => void;
+	setColor: Dispatch<SetStateAction<Color | null>>;
 	activeColorList: string;
 	setActiveColorList: (list: string) => void;
 	colorsConfig: {
@@ -14,6 +20,8 @@ type ColorContextType = {
 		list: string[];
 		descriptions: Record<string, { title: string; description: string }>;
 	}) => void;
+	nearestColors: Record<string, any> | null;
+	setNearestColors: Dispatch<SetStateAction<Record<string, any> | null>>;
 };
 
 const ColorContext = createContext<ColorContextType | undefined>(undefined);
@@ -41,6 +49,10 @@ export default function ColorProvider({
 		list: [],
 		descriptions: {},
 	});
+	const [nearestColors, setNearestColors] = useState<Record<
+		string,
+		any
+	> | null>(null);
 
 	return (
 		<ColorContext.Provider
@@ -51,6 +63,8 @@ export default function ColorProvider({
 				setActiveColorList,
 				colorsConfig,
 				setColorsConfig,
+				nearestColors,
+				setNearestColors,
 			}}
 		>
 			{children}
