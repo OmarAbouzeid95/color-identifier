@@ -79,27 +79,31 @@ export default function ImageUpload() {
 	};
 
 	return (
-		<div className='flex flex-col gap-4'>
-			<Label htmlFor='image-upload'>
-				<Card>
-					<CardContent className='flex flex-col items-center gap-4'>
-						<FileImages />
-						<span>Drop your image here, or browse</span>
-						<span className='text-xs text-muted-foreground'>
-							Supports: JPG, PNG, WebP
-						</span>
-					</CardContent>
-				</Card>
-			</Label>
-			<Input
-				id='image-upload'
-				className='hidden'
-				type='file'
-				accept='image/*'
-				onChange={handleImageUpload}
-			/>
-			<ColorListSelect />
-			<Card className={cn('p-0', !hasImage && 'hidden')}>
+		<div className='flex flex-col gap-4 md:flex-row md:justify-between'>
+			<div className='space-y-4 md:max-w-lg md:min-w-lg'>
+				<Label htmlFor='image-upload' className='block'>
+					<Card className='bg-white w-full'>
+						<CardContent className='flex flex-col md:h-44 items-center justify-center gap-4'>
+							<FileImages />
+							<span>Drop your image here, or browse</span>
+							<span className='text-xs text-muted-foreground'>
+								Supports: JPG, PNG, WebP
+							</span>
+						</CardContent>
+					</Card>
+				</Label>
+				<Input
+					id='image-upload'
+					className='hidden'
+					type='file'
+					accept='image/*'
+					onChange={handleImageUpload}
+				/>
+				<ColorListSelect />
+			</div>
+			<Card
+				className={cn('p-0 md:max-w-lg overflow-hidden', !hasImage && 'hidden')}
+			>
 				<CardContent className='p-0 relative'>
 					<canvas
 						ref={canvasRef}

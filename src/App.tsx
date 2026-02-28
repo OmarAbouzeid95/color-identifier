@@ -72,7 +72,7 @@ function App() {
 
 	return (
 		<MainLayout>
-			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4 md:flex-row md:max-w-6xl md:justify-between'>
+			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4 md:max-w-6xl'>
 				<ImageUpload />
 				{color && (
 					<div className='space-y-6'>
