@@ -6,6 +6,7 @@ import ImageUpload from './components/ImageUpload';
 import ColorListSelect from './components/ColorListSelect';
 import ColorDetailsTable from './components/ColorDetailsTable';
 import nearestColor from 'nearest-color';
+import { DEFAULT_COLORS } from './constants/colors';
 
 function App() {
 	const { setColor, activeColorList, setColorsConfig, setNearestColors } =
@@ -32,10 +33,11 @@ function App() {
 		fetch(`https://api.color.pizza/v1/?list=${activeColorList}`)
 			.then((res) => res.json())
 			.then((data) => {
-				if (data.colors && Array.isArray(data.colors)) {
-					setNearestColors(getNearsetColors(data.colors));
+				const clrs = activeColorList === 'basic' ? DEFAULT_COLORS : data.colors;
+				if (clrs && Array.isArray(clrs)) {
+					setNearestColors(getNearsetColors(clrs));
 
-					const nearest = nearestColor.from(getNearsetColors(data.colors));
+					const nearest = nearestColor.from(getNearsetColors(clrs));
 					setColor((prev) => {
 						if (!prev) return prev;
 						return {
@@ -57,8 +59,8 @@ function App() {
 					Identify Any Color
 				</h2>
 				<p className='mt-4 text-base text-foreground/60 max-w-lg mx-auto'>
-					Upload an image, click anywhere on it, and instantly get the
-					color name and values in every major format.
+					Upload an image, click anywhere on it, and instantly get the color
+					name and values in every major format.
 				</p>
 			</section>
 			<div className='max-w-lg mx-auto p-4 flex flex-col gap-4 md:max-w-7xl md:flex-row md:justify-between lg:gap-20'>
