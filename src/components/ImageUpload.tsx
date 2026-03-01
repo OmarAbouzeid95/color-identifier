@@ -169,7 +169,7 @@ export default function ImageUpload() {
 								</div>
 								<span>Drop your image here, or browse</span>
 								<span className='text-xs text-muted-foreground'>
-									Supports: JPG, PNG, WebP
+									Supports most image formats, including WebP and AVIF.
 								</span>
 							</CardContent>
 						</Card>
