@@ -23,6 +23,7 @@ export default function ImageUpload() {
 		x: number;
 		y: number;
 	} | null>(null);
+	const [isDragging, setIsDragging] = useState(false);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -66,6 +67,10 @@ export default function ImageUpload() {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
+		loadImageToCanvas(file);
+	};
+
+	const loadImageToCanvas = (file: File) => {
 		resetStates();
 
 		const img = new Image();
@@ -84,6 +89,26 @@ export default function ImageUpload() {
 			URL.revokeObjectURL(img.src);
 		};
 		img.src = URL.createObjectURL(file);
+	};
+
+	const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
+		e.preventDefault();
+		setIsDragging(false);
+
+		const file = e.dataTransfer.files?.[0];
+		if (!file || !file.type.startsWith('image/')) return;
+
+		loadImageToCanvas(file);
+	};
+
+	const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
+		e.preventDefault();
+		setIsDragging(true);
+	};
+
+	const handleDragLeave = (e: React.DragEvent<HTMLLabelElement>) => {
+		e.preventDefault();
+		setIsDragging(false);
 	};
 
 	return (
@@ -124,9 +149,20 @@ export default function ImageUpload() {
 				</CardContent>
 			</Card>
 			<div className='space-y-4 md:max-w-lg md:min-w-lg'>
-				<Label htmlFor='image-upload' className='block'>
+				<Label
+					htmlFor='image-upload'
+					className='block'
+					onDrop={handleDrop}
+					onDragOver={handleDragOver}
+					onDragLeave={handleDragLeave}
+				>
 					{!hasImage && (
-						<Card className='bg-white w-full border-dashed shadow-none!'>
+						<Card
+							className={cn(
+								'bg-white w-full border-dashed shadow-none! transition-colors',
+								isDragging && 'bg-main',
+							)}
+						>
 							<CardContent className='flex flex-col md:h-44 items-center justify-center gap-4'>
 								<div className='bg-background p-4 rounded-full'>
 									<Upload />
