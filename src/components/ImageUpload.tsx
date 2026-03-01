@@ -90,11 +90,11 @@ export default function ImageUpload() {
 		<div className='flex flex-col gap-4'>
 			<Card
 				className={cn(
-					'p-0 bg-secondary-background h-80 lg:h-120 w-fit mx-auto overflow-visible',
+					'p-0 bg-secondary-background max-w-lg overflow-visible',
 					!hasImage && 'hidden',
 				)}
 			>
-				<CardContent className='p-0 relative w-fit mx-auto h-full flex items-center justify-center'>
+				<CardContent className='p-0 relative h-full flex items-center justify-center'>
 					<canvas
 						ref={canvasRef}
 						className='max-w-full max-h-full cursor-crosshair block'
@@ -107,6 +107,7 @@ export default function ImageUpload() {
 								style={{
 									left: focusCoordinates.x - 8,
 									top: focusCoordinates.y - 8,
+									backgroundColor: color?.hex,
 								}}
 							/>
 							<span
