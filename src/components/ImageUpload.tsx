@@ -167,8 +167,10 @@ export default function ImageUpload() {
 								<div className='bg-background p-4 rounded-full'>
 									<Upload />
 								</div>
-								<span>Drop your image here, or browse</span>
-								<span className='text-xs text-muted-foreground'>
+								<span className='text-center'>
+									Drop your image here, or browse
+								</span>
+								<span className='text-xs text-muted-foreground text-center'>
 									Supports most image formats, including WebP and AVIF.
 								</span>
 							</CardContent>
