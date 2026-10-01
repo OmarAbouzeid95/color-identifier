@@ -1,7 +1,7 @@
 import { type Color } from '@/types/colors';
 
 function componentToHex(c: number) {
-	var hex = c.toString(16);
+	const hex = c.toString(16);
 	return hex.length == 1 ? '0' + hex : hex;
 }
 
@@ -129,8 +129,10 @@ export function capitalizeFirstLetter(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function getNearsetColors(baseColors: Color[]) {
-	return baseColors.reduce(
+export function getNearsetColors(
+	baseColors: Pick<Color, 'name' | 'hex'>[],
+): Record<string, string> {
+	return baseColors.reduce<Record<string, string>>(
 		(o, { name, hex }) => Object.assign(o, { [name]: hex }),
 		{},
 	);

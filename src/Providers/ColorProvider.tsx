@@ -1,15 +1,19 @@
 import type { Color } from '@/types/colors';
+import nearestColor from 'nearest-color';
 import {
 	createContext,
 	useContext,
+	useMemo,
 	useState,
 	type Dispatch,
 	type SetStateAction,
 } from 'react';
 
+type PickedColor = Omit<Color, 'name'>;
+
 type ColorContextType = {
 	color: Color | null;
-	setColor: Dispatch<SetStateAction<Color | null>>;
+	setColor: Dispatch<SetStateAction<PickedColor | null>>;
 	activeColorList: string;
 	setActiveColorList: (list: string) => void;
 	colorsConfig: {
@@ -20,8 +24,7 @@ type ColorContextType = {
 		list: string[];
 		descriptions: Record<string, { title: string; description: string }>;
 	}) => void;
-	nearestColors: Record<string, any> | null;
-	setNearestColors: Dispatch<SetStateAction<Record<string, any> | null>>;
+	setNearestColors: Dispatch<SetStateAction<Record<string, string> | null>>;
 };
 
 const ColorContext = createContext<ColorContextType | undefined>(undefined);
@@ -40,7 +43,7 @@ export default function ColorProvider({
 }: {
 	children: React.ReactNode;
 }) {
-	const [color, setColor] = useState<Color | null>(null);
+	const [pickedColor, setColor] = useState<PickedColor | null>(null);
 	const [activeColorList, setActiveColorList] = useState<string>('basic');
 	const [colorsConfig, setColorsConfig] = useState<{
 		list: string[];
@@ -51,8 +54,21 @@ export default function ColorProvider({
 	});
 	const [nearestColors, setNearestColors] = useState<Record<
 		string,
-		any
+		string
 	> | null>(null);
+
+	const matchColor = useMemo(
+		() => (nearestColors ? nearestColor.from(nearestColors) : null),
+		[nearestColors],
+	);
+
+	const color = useMemo<Color | null>(() => {
+		if (!pickedColor) return null;
+		return {
+			...pickedColor,
+			name: matchColor?.(pickedColor.hex)?.name || 'Unknown',
+		};
+	}, [pickedColor, matchColor]);
 
 	return (
 		<ColorContext.Provider
@@ -63,7 +79,6 @@ export default function ColorProvider({
 				setActiveColorList,
 				colorsConfig,
 				setColorsConfig,
-				nearestColors,
 				setNearestColors,
 			}}
 		>

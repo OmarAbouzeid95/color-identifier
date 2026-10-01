@@ -14,10 +14,9 @@ import {
 import { useColor } from '@/Providers/ColorProvider';
 import { Upload } from 'lucide-react';
 import { Button } from './ui/button';
-import nearestColor from 'nearest-color';
 
 export default function ImageUpload() {
-	const { color, setColor, nearestColors } = useColor();
+	const { color, setColor } = useColor();
 	const [hasImage, setHasImage] = useState(false);
 	const [focusCoordinates, setFocusCoordinates] = useState<{
 		x: number;
@@ -49,11 +48,7 @@ export default function ImageUpload() {
 
 		const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
 
-		if (!nearestColors) return;
-
-		const nearest = nearestColor.from(nearestColors);
 		setColor({
-			name: nearest(convertRGBToHex(r, g, b))?.name || 'Unknown',
 			hex: convertRGBToHex(r, g, b),
 			rgb: `rgb(${r}, ${g}, ${b})`,
 			hsl: convertRGBToHSL(r, g, b),
@@ -142,7 +137,7 @@ export default function ImageUpload() {
 									top: focusCoordinates.y + 16,
 								}}
 							>
-								{capitalizeFirstLetter(color?.name!)}
+								{capitalizeFirstLetter(color?.name ?? 'unknown')}
 							</span>
 						</>
 					)}

@@ -5,12 +5,12 @@ import { useColor } from './Providers/ColorProvider';
 import ImageUpload from './components/ImageUpload';
 import ColorListSelect from './components/ColorListSelect';
 import ColorDetailsTable from './components/ColorDetailsTable';
-import nearestColor from 'nearest-color';
 import { DEFAULT_COLORS } from './constants/colors';
 
+const BASIC_NEAREST_COLORS = getNearsetColors(DEFAULT_COLORS);
+
 function App() {
-	const { setColor, activeColorList, setColorsConfig, setNearestColors } =
-		useColor();
+	const { activeColorList, setColorsConfig, setNearestColors } = useColor();
 
 	useEffect(() => {
 		fetch('https://api.color.pizza/v1/lists')
@@ -30,21 +30,16 @@ function App() {
 	}, []);
 
 	useEffect(() => {
+		if (activeColorList === 'basic') {
+			setNearestColors(BASIC_NEAREST_COLORS);
+			return;
+		}
+
 		fetch(`https://api.color.pizza/v1/?list=${activeColorList}`)
 			.then((res) => res.json())
 			.then((data) => {
-				const clrs = activeColorList === 'basic' ? DEFAULT_COLORS : data.colors;
-				if (clrs && Array.isArray(clrs)) {
-					setNearestColors(getNearsetColors(clrs));
-
-					const nearest = nearestColor.from(getNearsetColors(clrs));
-					setColor((prev) => {
-						if (!prev) return prev;
-						return {
-							...prev,
-							name: nearest(prev.hex)?.name || 'Unknown',
-						};
-					});
+				if (data.colors && Array.isArray(data.colors)) {
+					setNearestColors(getNearsetColors(data.colors));
 				}
 			})
 			.catch((err) => {
