@@ -1,5 +1,5 @@
-import type { Color } from '@/types/colors';
-import nearestColor from 'nearest-color';
+import { convertHexToRGB, createColorMatcher } from '@/lib/helpers';
+import type { Color, NamedColor } from '@/types/colors';
 import {
 	createContext,
 	useContext,
@@ -24,7 +24,7 @@ type ColorContextType = {
 		list: string[];
 		descriptions: Record<string, { title: string; description: string }>;
 	}) => void;
-	setNearestColors: Dispatch<SetStateAction<Record<string, string> | null>>;
+	setColorList: Dispatch<SetStateAction<NamedColor[]>>;
 };
 
 const ColorContext = createContext<ColorContextType | undefined>(undefined);
@@ -52,21 +52,15 @@ export default function ColorProvider({
 		list: [],
 		descriptions: {},
 	});
-	const [nearestColors, setNearestColors] = useState<Record<
-		string,
-		string
-	> | null>(null);
+	const [colorList, setColorList] = useState<NamedColor[]>([]);
 
-	const matchColor = useMemo(
-		() => (nearestColors ? nearestColor.from(nearestColors) : null),
-		[nearestColors],
-	);
+	const matchColor = useMemo(() => createColorMatcher(colorList), [colorList]);
 
 	const color = useMemo<Color | null>(() => {
 		if (!pickedColor) return null;
 		return {
 			...pickedColor,
-			name: matchColor?.(pickedColor.hex)?.name || 'Unknown',
+			name: matchColor(...convertHexToRGB(pickedColor.hex))?.name || 'Unknown',
 		};
 	}, [pickedColor, matchColor]);
 
@@ -79,7 +73,7 @@ export default function ColorProvider({
 				setActiveColorList,
 				colorsConfig,
 				setColorsConfig,
-				setNearestColors,
+				setColorList,
 			}}
 		>
 			{children}

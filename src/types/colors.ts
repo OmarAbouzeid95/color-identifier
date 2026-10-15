@@ -7,3 +7,5 @@ export type Color = {
 	cmyk: string;
 	oklch: string;
 };
+
+export type NamedColor = Pick<Color, 'name' | 'hex'>;

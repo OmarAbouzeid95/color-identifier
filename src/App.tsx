@@ -1,16 +1,14 @@
 import { useEffect } from 'react';
 import MainLayout from './components/layouts/MainLayout';
-import { getNearsetColors } from './lib/helpers';
 import { useColor } from './Providers/ColorProvider';
 import ImageUpload from './components/ImageUpload';
 import ColorListSelect from './components/ColorListSelect';
 import ColorDetailsTable from './components/ColorDetailsTable';
 import { DEFAULT_COLORS } from './constants/colors';
-
-const BASIC_NEAREST_COLORS = getNearsetColors(DEFAULT_COLORS);
+import type { NamedColor } from './types/colors';
 
 function App() {
-	const { activeColorList, setColorsConfig, setNearestColors } = useColor();
+	const { activeColorList, setColorsConfig, setColorList } = useColor();
 
 	useEffect(() => {
 		fetch('https://api.color.pizza/v1/lists')
@@ -31,7 +29,7 @@ function App() {
 
 	useEffect(() => {
 		if (activeColorList === 'basic') {
-			setNearestColors(BASIC_NEAREST_COLORS);
+			setColorList(DEFAULT_COLORS);
 			return;
 		}
 
@@ -39,7 +37,10 @@ function App() {
 			.then((res) => res.json())
 			.then((data) => {
 				if (data.colors && Array.isArray(data.colors)) {
-					setNearestColors(getNearsetColors(data.colors));
+					// Keep only what the matcher needs; the API sends many extra fields per color
+					setColorList(
+						data.colors.map(({ name, hex }: NamedColor) => ({ name, hex })),
+					);
 				}
 			})
 			.catch((err) => {
